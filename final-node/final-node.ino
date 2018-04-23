@@ -68,29 +68,3 @@ void loop() {
     connectionMade = 0;
   }
 }
- 
-//void loop() {
-//  Serial.println("###################################################################################################");
-//  Serial.println("AWAKE!");
-//  int initTime = millis();
-//  connectionMade = 0;
-//
-//  // Fica acordado "pra sempre" até fazer a primeira conexão. Depois, fica acordado por 30 segundos.
-//  while((millis() - initTime < 30000 || firstConnection == 0) && connectionMade == 0){
-//    sendMessage();
-//    delay(0);
-//  }
-//
-//  if(connectionMade == 1){
-//    Serial.println("Conseguiu connectar!!!");
-//  } else {
-//    Serial.println("NÃO conseguiu conectar...");
-//  }
-//  
-//  Serial.println("Sleeping ...");
-//  
-//  // Modem Sleep: dorme por 20 segundos.
-//  WiFi.forceSleepBegin();
-//  delay(20000);
-//  WiFi.forceSleepWake();
-//}

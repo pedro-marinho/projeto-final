@@ -57,22 +57,3 @@ void loop() {
     connectionMade = 0;
   }
 }
-
-//void loop() {
-//  Serial.println("###################################################################################################");
-//  Serial.println("AWAKE!");
-//  initTime = millis();
-//  connectionMade = 0;
-//
-//  // Fica acordado por 30 segundos.
-//  while(millis() - initTime < 30000 && connectionMade == 0){
-//    server.handleClient();
-//  }
-//  
-//  Serial.println("Sleeping ...");
-//  
-//  // Modem Sleep: dorme por 20 segundos.
-//  WiFi.forceSleepBegin();
-//  delay(20000);
-//  WiFi.forceSleepWake();
-//}
