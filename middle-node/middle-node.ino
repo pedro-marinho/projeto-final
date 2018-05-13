@@ -67,8 +67,6 @@ void loop() {
     delay(20000);
     WiFi.forceSleepWake();
     
-    Serial.println("###################################################################################################");
-    Serial.println("AWAKE!");
     configAPMode();
     initTime = millis();
     connectionMadeWithLastNode = 0;
@@ -97,11 +95,12 @@ void configAPMode() {
 }
 
 void configClientMode() {
-  WiFi.softAPdisconnect(true);
-  WiFi.disconnect(true);
+  WiFi.softAPdisconnect();
+  WiFi.disconnect();
   // WiFi.mode(WIFI_STA);
   WiFi.begin(nextSSID, nextPassword);
-  WiFi.mode(WIFI_AP_STA);
+  WiFi.reconnect();
+  // WiFi.mode(WIFI_AP_STA);
   clientModeConfigured = 1;
   Serial.println("CLIENT MODE");
 }
