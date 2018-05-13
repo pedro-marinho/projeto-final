@@ -7,7 +7,7 @@
 #include <ESP8266HTTPClient.h>
 
 // Login e senha do nó seguinte
-const char* ssid = "node_two";
+const char* ssid = "node_middle1";
 const char* password = "a12345678";
 
 // Verifica se já conseguiu realizar a primeira conexão com o nó seguinte.
@@ -47,8 +47,10 @@ void setup () {
 
 void loop() {
   // Fica acordado "pra sempre" até fazer a primeira conexão. Depois, fica acordado por 30 segundos.
-  if((millis() - initTime < 30000 || firstConnection == 0) && connectionMade == 0){
-    sendMessage();
+  if(millis() - initTime < 30000 || firstConnection == 0){
+    if(connectionMade == 0){
+      sendMessage();
+    }
   } else {
     if(connectionMade == 1){
       Serial.println("Conseguiu connectar!!!");

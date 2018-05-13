@@ -9,11 +9,11 @@
 #include <ESP8266WebServer.h>
 
 // Login e senha do nó (access point)
-const char *ssid = "node_two";
+const char *ssid = "main_node";
 const char *password = "a12345678";
 
 // Verifica se a conexão já foi feita
-int connectionMade = 0;
+int firstConnection = 0;
 
 // Para contar tempo acordado
 int initTime = 0;
@@ -25,7 +25,7 @@ ESP8266WebServer server(80);
 
 void response() {
   Serial.println(server.arg("plain"));
-  connectionMade = 1;
+  firstConnection = 1;
 }
 
 void setup() {
@@ -41,7 +41,7 @@ void setup() {
 }
 
 void loop() {
-  if(millis() - initTime < 30000 && connectionMade == 0){ // Fica acordado por 30 segundos.
+  if(millis() - initTime < 30000 || firstConnection == 0){ // Fica acordado por 30 segundos.
     server.handleClient();
   } else {
     Serial.println("Sleeping ...");
@@ -54,6 +54,5 @@ void loop() {
     Serial.println("###################################################################################################");
     Serial.println("AWAKE!");
     initTime = millis();
-    connectionMade = 0;
   }
 }
