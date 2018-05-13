@@ -108,15 +108,13 @@ void configClientMode() {
 
 void sendMessage(){
   if (WiFi.status() == WL_CONNECTED){
-    Serial.println(WiFi.localIP());
     HTTPClient http;
     http.begin("http://192.168.4.1");
     http.addHeader("Content-Type", "application/json");
-    Serial.println("aguardando ......");
     int httpCode = http.POST("{\"Value\": 200}");
     Serial.print("HTTP Code: ");
     Serial.println(httpCode);
-    connectionMadeWithNextNode = 1;
+    if(httpCode != -1) connectionMadeWithNextNode = 1;
     
     http.end();
   }
