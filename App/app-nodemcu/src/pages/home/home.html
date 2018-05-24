@@ -15,6 +15,12 @@
         <ion-option *ngFor="let sensor of sensors">{{sensor}}</ion-option>
       </ion-select>
     </ion-item>
-    <button ion-item *ngFor="let value of valuesToBeDisplayed" (click)="displayTime(value)">Valor Medido: {{value.value}}</button>
   </ion-list>
+
+  <ion-card *ngFor="let value of valuesToBeDisplayed">
+    <ion-card-content>
+      <strong><p>Valor Medido: {{value.value}}</p></strong>
+      <p>Data: {{value.time * 1000 | date:'dd-MM-yyyy - HH:mm'}}</p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

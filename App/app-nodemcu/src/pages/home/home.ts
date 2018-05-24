@@ -1,6 +1,7 @@
 import { SensorsService } from './../../services/sensors.service';
 import { Component } from '@angular/core';
-import { NavController, ToastController } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
+import { UtilService } from '../../util/util.service';
 
 @Component({
   selector: 'page-home',
@@ -16,41 +17,34 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     private sensorsService: SensorsService,
-    private toastCtrl: ToastController
+    private utilService: UtilService
   ) {}
 
   async ionViewWillLoad() {
     try {
+      this.utilService.showLoading();
       await Promise.all([this.getSensors(), await this.getValues()]);
       this.sensorChanged();
     } catch (e) {
       console.log(e);
+      this.utilService.errorMessage('Erro ao carregar as informações sobre os sensores');
+    } finally {
+      this.utilService.dismissLoading();
     }
   }
 
-  async getSensors() {
+  private async getSensors() {
     const response = await this.sensorsService.getSensors();
     this.sensors = response.data;
     this.sensorSelected = this.sensors[0];
   }
 
-  async getValues() {
+  private async getValues() {
     const response = await this.sensorsService.getValues();
     this.values = response.data;
   }
 
-  sensorChanged() {
+  public sensorChanged() {
     this.valuesToBeDisplayed = this.values.filter(v => v.sensor == this.sensorSelected);
-  }
-
-  displayTime(value) {
-    var date = new Date(value.time * 1000);
-
-    let toast = this.toastCtrl.create({
-      message: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} - ${date.getHours()}:${date.getMinutes()}`,
-      duration: 3000,
-      position: 'middle'
-    });
-    toast.present();
   }
 }
