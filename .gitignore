@@ -1,2 +1,4 @@
 Server/node_modules/*
 App/app-nodemcu/node_modules/*
+App/app-nodemcu/www/*
+App/app-nodemcu/.sourcemaps/*
