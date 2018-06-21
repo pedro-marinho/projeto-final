@@ -31,6 +31,7 @@ void response() {
 void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_AP_STA);
+  WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   WiFi.softAP(ssid, password);
 
   server.on("/", response);
@@ -38,6 +39,8 @@ void setup() {
 
   Serial.println("###################################################################################################");
   Serial.println("AWAKE!");
+  Serial.print("AP MODE IP: ");
+  Serial.println(WiFi.softAPIP());
 }
 
 void loop() {

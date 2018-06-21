@@ -22,8 +22,10 @@ int initTime = 0;
 // Envia o valor do sensor para o nó seguinte
 void sendMessage(){
   if (WiFi.status() == WL_CONNECTED){
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
     HTTPClient http;
-    http.begin("http://192.168.4.1");
+    http.begin("http://192.168.4.5");
     http.addHeader("Content-Type", "application/json");
     int httpCode = http.POST("{\"Value\": 150}");
     Serial.print("HTTP Code: ");
@@ -40,6 +42,7 @@ void setup () {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
+  ESP.wdtEnable(30000);
 
   Serial.println("###################################################################################################");
   Serial.println("AWAKE!");
@@ -60,6 +63,7 @@ void loop() {
     Serial.println("Sleeping ...");
   
     // Modem Sleep: dorme por 20 segundos.
+    ESP.wdtFeed();
     WiFi.forceSleepBegin();
     delay(20000);
     WiFi.forceSleepWake();

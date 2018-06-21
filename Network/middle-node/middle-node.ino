@@ -33,7 +33,7 @@ int firstConnection = 0;
 int initTime = 0;
 
 // Endereço de IP fixo para o nó na rede dele (access point)
-IPAddress apIP(192, 168, 4, 1);  
+IPAddress apIP(192, 168, 4, 5);  
 
 ESP8266WebServer server(80);
 
@@ -45,7 +45,7 @@ void handleAwakeTime();
 
 void setup() {
   Serial.begin(115200);
-  ESP.wdtEnable(30000);
+  ESP.wdtEnable(40000);
   configAPMode();
 }
 
@@ -85,6 +85,7 @@ void response() {
 
 void configAPMode() {
   WiFi.mode(WIFI_AP_STA);
+  WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
   WiFi.softAP(ssid, password);
 
   server.on("/", response);
@@ -92,21 +93,33 @@ void configAPMode() {
 
   Serial.println("###################################################################################################");
   Serial.println("AWAKE!");
+  Serial.print("AP MODE IP: ");
+  Serial.println(WiFi.softAPIP());
 }
 
 void configClientMode() {
+  // WiFi.forceSleepBegin();
+  // delay(500);
+  // WiFi.forceSleepWake();
+  
   WiFi.softAPdisconnect();
   WiFi.disconnect();
   // WiFi.mode(WIFI_STA);
+  delay(100);
+  
+  // WiFi.softAPdisconnect();
+  // WiFi.disconnect();
+  // WiFi.mode(WIFI_STA);
   WiFi.begin(nextSSID, nextPassword);
   WiFi.reconnect();
-  // WiFi.mode(WIFI_AP_STA);
   clientModeConfigured = 1;
   Serial.println("CLIENT MODE");
 }
 
 void sendMessage(){
   if (WiFi.status() == WL_CONNECTED){
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
     HTTPClient http;
     http.begin("http://192.168.4.1");
     http.addHeader("Content-Type", "application/json");
