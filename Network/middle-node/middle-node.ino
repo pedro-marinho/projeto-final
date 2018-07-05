@@ -50,7 +50,7 @@ void setup() {
 }
 
 void loop() {
-  if(millis() - initTime < 30000 || firstConnection == 0){ // Fica acordado por 30 segundos.
+  if(millis() - initTime < 300000 || firstConnection == 0){ // Fica acordado por 30 segundos.
     handleAwakeTime();
   } else {
     if(connectionMadeWithNextNode == 1){
@@ -103,15 +103,17 @@ void configClientMode() {
   // WiFi.forceSleepWake();
   
   WiFi.softAPdisconnect();
-  WiFi.disconnect();
+  // WiFi.disconnect();
   // WiFi.mode(WIFI_STA);
   delay(100);
   
   // WiFi.softAPdisconnect();
   // WiFi.disconnect();
   // WiFi.mode(WIFI_STA);
+  // WiFi.reconnect();
   WiFi.begin(nextSSID, nextPassword);
-  WiFi.reconnect();
+  // WiFi.begin();
+  // WiFi.reconnect();
   clientModeConfigured = 1;
   Serial.println("CLIENT MODE");
 }
@@ -120,6 +122,7 @@ void sendMessage(){
   if (WiFi.status() == WL_CONNECTED){
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
+    Serial.printf("Gataway IP: %s\n", WiFi.gatewayIP().toString().c_str());
     HTTPClient http;
     http.begin("http://192.168.4.1");
     http.addHeader("Content-Type", "application/json");
@@ -143,4 +146,3 @@ void handleAwakeTime() {
     }
   }
 }
-
