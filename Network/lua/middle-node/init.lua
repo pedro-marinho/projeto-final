@@ -25,15 +25,19 @@ Connection: Closed
 -- Callback para função que envia mensagem
 local function cb_send_message(code, data)
   if (code < 0) then
-    print("HTTP request failed: " .. codigo)
+    print("HTTP request failed: " .. code)
   else
-    print(code, data)
+    print("codigo")
+    print(code)
+    print("data")
+    print(data)
   end
 end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
-  http.get("http://192.168.4.1", 'Content-Type: application/json\r\n', '{"value":"150"}', cb_send_message)
+  --http.post("http://192.168.4.1", 'Content-Type: application/json\r\n', '{"value":"150"}', cb_send_message)
+  http.get("http://192.168.4.1", nil, cb_send_message)
 end
 
 -- Configurando modo cliente
@@ -52,7 +56,7 @@ end
 -- Responde a requisição
 local response_connection = function(client, request)
   local end_connection =  function() 
-    print("respondeu")
+    print("requisicao")
     print(request)
     client:close()
     config_client_mode()

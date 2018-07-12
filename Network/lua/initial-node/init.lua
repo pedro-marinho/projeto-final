@@ -25,7 +25,7 @@ Connection: Closed
 -- Responde a requisição
 local response_connection = function(client, request)
   local end_connection =  function() 
-    print("respondeu")
+    print("requisicao")
     print(request)
     client:close() 
   end
