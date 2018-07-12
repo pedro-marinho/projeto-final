@@ -9,7 +9,7 @@ end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
-  http.get("http://192.168.4.1", 'Content-Type: application/json\r\n', '{"value":"150"}', cb_send_message)
+  http.post("http://192.168.4.1", 'Content-Type: application/json\r\n', '{"value":"150"}', cb_send_message)
 end
 
 -- Configurando modo cliente
@@ -21,5 +21,6 @@ local wificonf = {
   got_ip_cb = function (iptable) print ("ip: ".. iptable.IP); send_message(); end,
   save = false
 }
+print("AWAKE")
 wifi.setmode(wifi.STATIONAP)
 wifi.sta.config(wificonf)
