@@ -27,7 +27,12 @@ local response_connection = function(client, request)
   local end_connection =  function() 
     print("requisicao")
     print(request)
-    client:close() 
+    client:close()
+    
+    cfg = {}
+    cfg.duration = 10000*1000
+    cfg.resume_cb = function() print("WiFi resume") end
+    node.sleep(cfg)
   end
   client:send(buf, end_connection)
 end

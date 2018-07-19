@@ -3,7 +3,7 @@ wifi.setmode(wifi.STATIONAP)
 -- SSID e Senha do AP
 wifi.ap.config({ssid="middle_node1", pwd="a12345678"})
 -- Definindo IP no modo AP
-wifi.ap.setip({ip="192.168.4.1", netmask="255.255.255.0", gateway="192.168.4.1"})
+wifi.ap.setip({ip="192.168.4.2", netmask="255.255.255.0", gateway="192.168.4.2"})
 
 -- Inicializando
 print("AWAKE")
@@ -27,11 +27,13 @@ local function cb_send_message(code, data)
   if (code < 0) then
     print("HTTP request failed: " .. code)
   else
-    print("codigo")
-    print(code)
-    print("data")
-    print(data)
+    print("codigo: " .. code)
   end
+
+  cfg = {}
+  cfg.duration = 10000*1000
+  cfg.resume_cb = function() print("WiFi resume") end
+  node.sleep(cfg)
 end
 
 -- Envia mensagem para o próximo nó
