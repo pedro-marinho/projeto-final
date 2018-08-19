@@ -30,16 +30,16 @@ local function cb_send_message(code, data)
     print("codigo: " .. code)
   end
 
-  cfg = {}
-  cfg.duration = 10000*1000
-  cfg.resume_cb = function() print("WiFi resume") end
-  node.sleep(cfg)
+  -- cfg = {}
+  -- cfg.duration = 10000*1000
+  -- cfg.resume_cb = function() print("WiFi resume") end
+  -- node.sleep(cfg)
 end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
-  --http.post("http://192.168.4.1", 'Content-Type: application/json\r\n', '{"value":"150"}', cb_send_message)
-  http.get("http://192.168.4.1", nil, cb_send_message)
+  http.post("http://192.168.4.3", 'Content-Type: text/plain\r\n', '{"value":"150"}', cb_send_message)
+  --http.get("http://192.168.4.1", nil, cb_send_message)
 end
 
 -- Configurando modo cliente
@@ -75,5 +75,5 @@ end
 -- Espera conexão
 local server = net.createServer(net.TCP)
 if server then
-  server:listen(80, "192.168.4.1", handle_connection)
+  server:listen(80, "192.168.4.2", handle_connection)
 end
