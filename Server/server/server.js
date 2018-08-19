@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 
 const { Value } = require('./models/valueModel');
 
+const port = process.env.PORT || 3000;
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -62,6 +64,6 @@ app.get('/sensors', async (req, res) => {
     }
 });
 
-app.listen(3000, '192.168.0.11', () => {
-    console.log('Server is running on port 3000');
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
