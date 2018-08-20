@@ -1,3 +1,5 @@
+local string = require "string"
+
 -- Criando AP
 wifi.setmode(wifi.STATIONAP)
 -- SSID e Senha do AP
@@ -8,6 +10,11 @@ wifi.ap.setip({ip="192.168.4.2", netmask="255.255.255.0", gateway="192.168.4.2"}
 -- Inicializando
 print("AWAKE")
 print(wifi.ap.getip())
+
+-- Cria JSON
+local function parseJSONArray(source, str)
+  return string.sub(source, 1, string.len(source) - 1)..str.."]"
+end
 
 -- Conteúdo da resposta da conexao
 buf = [[
@@ -38,8 +45,7 @@ end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
-  http.post("http://192.168.4.3", 'Content-Type: text/plain\r\n', '{"value":"150"}', cb_send_message)
-  --http.get("http://192.168.4.1", nil, cb_send_message)
+  http.post("http://192.168.4.3", nil, parseJSONArray('[{"value":"150","sensor":"final","time":"1530155052"}]',',{"value":"250","sensor":"middle1","time":"1530155052"}'), cb_send_message)
 end
 
 -- Configurando modo cliente
@@ -56,7 +62,7 @@ local function config_client_mode()
 end
 
 -- Responde a requisição
-local response_connection = function(client, request)
+local function response_connection(client, request)
   local end_connection =  function() 
     print("requisicao")
     print(request)
@@ -67,13 +73,17 @@ local response_connection = function(client, request)
 end
 
 -- Trata a conexão
-local handle_connection = function(conn)
+local function handle_connection(conn)
   print ("recebeu conexao")
   conn:on("receive", response_connection) 
 end
 
 -- Espera conexão
-local server = net.createServer(net.TCP)
-if server then
-  server:listen(80, "192.168.4.2", handle_connection)
+local function initialize()
+  local server = net.createServer(net.TCP)
+  if server then
+    server:listen(80, "192.168.4.2", handle_connection)
+  end
 end
+
+initialize()

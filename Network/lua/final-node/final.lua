@@ -1,3 +1,10 @@
+local string = require "string"
+
+-- Cria JSON
+local function parseJSONArray(source, str)
+  return string.sub(source, 1, string.len(source) - 1)..str.."]"
+end
+
 -- Callback para função que envia mensagem
 local function cb_send_message(code, data)
   if (code < 0) then
@@ -14,8 +21,7 @@ end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
-  http.post("http://192.168.4.2", "Content-Type: text/plain\r\n", '{"value":"150"}', cb_send_message)
-  --http.get("http://192.168.4.1", nil, cb_send_message)
+  http.post("http://192.168.4.2", nil, parseJSONArray("[]",'{"value":"150","sensor":"final","time":"1530155052"}'), cb_send_message)
 end
 
 -- Configurando modo cliente
@@ -27,7 +33,8 @@ local wificonf = {
   got_ip_cb = function (iptable) print ("ip: ".. iptable.IP); send_message(); end,
   save = false
 }
-print("AWAKE")
-wifi.sta.disconnect()
+
 wifi.setmode(wifi.STATIONAP)
 wifi.sta.config(wificonf)
+
+print("AWAKE")
