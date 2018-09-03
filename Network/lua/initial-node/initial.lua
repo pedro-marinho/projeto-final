@@ -1,7 +1,7 @@
 local string = require "string"
 
 -- Criando AP
-wifi.setmode(wifi.STATIONAP)
+wifi.setmode(wifi.SOFTAP)
 -- SSID e Senha do AP
 wifi.ap.config({ssid="main_node", pwd="a12345678"})
 -- Definindo IP no modo AP
@@ -24,18 +24,13 @@ local function cb_send_message(code, data)
     print("codigo: " .. code)
   end
 
-  -- print("vai dormir")
-  -- cfg = {}
-  -- cfg.wake_pin = 4
-  -- cfg.duration = 1000000
-  -- cfg.preserve_mode=false
-  -- cfg.resume_cb = function() print("WiFi resume"); initialize(); end
-  -- node.sleep(cfg)
+  print("vai dormir")
+  node.dsleep(10000000)
 end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
-  http.post("http://polar-dawn-30624.herokuapp.com/values", 'Content-Type: application/json\r\n', parseJSONArray('[{"value":"150","sensor":"final","time":"1530155052"},{"value":"250","sensor":"middle1","time":"1530155052"}]',',{"value":"350","sensor":"initial","time":"1530155052"}'), cb_send_message)
+  http.post("http://polar-dawn-30624.herokuapp.com/values", 'Content-Type: application/json\r\n', parseJSONArray('[{"value":"150","sensor":"final","time":"1530155052"},{"value":"250","sensor":"middle1","time":"1530155052"}]',',{"value":"3500","sensor":"initial","time":"1530155053"}'), cb_send_message)
 end
 
 local function config_client_mode()
@@ -47,6 +42,7 @@ local function config_client_mode()
     got_ip_cb = function (iptable) print ("ip: ".. iptable.IP); send_message(); end,
     save = false
   }
+  wifi.setmode(wifi.STATION)
   wifi.sta.config(wificonf)
 end
 

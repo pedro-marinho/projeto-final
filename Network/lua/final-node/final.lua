@@ -13,15 +13,18 @@ local function cb_send_message(code, data)
     print("codigo: " .. code)
   end
 
-  -- cfg = {}
-  -- cfg.duration = 10000*1000
-  -- cfg.resume_cb = function() print("WiFi resume") end
-  -- node.sleep(cfg)
+  print("vai dormir")
+  node.dsleep(10000000)
 end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
-  http.post("http://192.168.4.2", nil, parseJSONArray("[]",'{"value":"150","sensor":"final","time":"1530155052"}'), cb_send_message)
+  cl=net.createConnection(net.TCP, 0)
+  cl:on("receive", function(sck, c) print(c) end)
+  cl:on("connection", function(sck, c)
+    sck:send('{"value":"150","sensor":"final","time":"1530155052"}')
+  end)
+  cl:connect(80,"192.168.4.2")
 end
 
 -- Configurando modo cliente
@@ -34,7 +37,7 @@ local wificonf = {
   save = false
 }
 
-wifi.setmode(wifi.STATIONAP)
+wifi.setmode(wifi.STATION)
 wifi.sta.config(wificonf)
 
 print("AWAKE")

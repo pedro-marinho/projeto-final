@@ -1,7 +1,7 @@
 local string = require "string"
 
 -- Criando AP
-wifi.setmode(wifi.STATIONAP)
+wifi.setmode(wifi.SOFTAP)
 -- SSID e Senha do AP
 wifi.ap.config({ssid="middle_node1", pwd="a12345678"})
 -- Definindo IP no modo AP
@@ -37,15 +37,18 @@ local function cb_send_message(code, data)
     print("codigo: " .. code)
   end
 
-  -- cfg = {}
-  -- cfg.duration = 10000*1000
-  -- cfg.resume_cb = function() print("WiFi resume") end
-  -- node.sleep(cfg)
+  print("vai dormir")
+  node.dsleep(10000000)
 end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
-  http.post("http://192.168.4.3", nil, parseJSONArray('[{"value":"150","sensor":"final","time":"1530155052"}]',',{"value":"250","sensor":"middle1","time":"1530155052"}'), cb_send_message)
+  cl=net.createConnection(net.TCP, 0)
+  cl:on("receive", function(sck, c) print(c) end)
+  cl:on("connection", function(sck, c)
+    sck:send(parseJSONArray('[{"value":"150","sensor":"final","time":"1530155052"}]',',{"value":"250","sensor":"middle1","time":"1530155052"}'))
+  end)
+  cl:connect(80,"192.168.4.3")
 end
 
 -- Configurando modo cliente
@@ -58,6 +61,7 @@ local function config_client_mode()
     got_ip_cb = function (iptable) print ("ip: ".. iptable.IP); send_message(); end,
     save = false
   }
+  wifi.setmode(wifi.STATION)
   wifi.sta.config(wificonf)
 end
 
