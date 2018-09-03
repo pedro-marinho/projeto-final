@@ -1,4 +1,3 @@
-Server/node_modules/*
-App/app-nodemcu/node_modules/*
-App/app-nodemcu/www/*
-App/app-nodemcu/.sourcemaps/*
+aplicativo/app-nodemcu/node_modules/*
+aplicativo/app-nodemcu/www/*
+aplicativo/app-nodemcu/.sourcemaps/*
