@@ -46,7 +46,7 @@ local function send_message()
   cl=net.createConnection(net.TCP, 0)
   cl:on("receive", function(sck, c) print(c) end)
   cl:on("connection", function(sck, c)
-    sck:send(parseJSONArray('[{"value":"150","sensor":"final","time":"1530155052"}]',',{"value":"250","sensor":"middle1","time":"1530155052"}'))
+    sck:send(parseJSONArray('[{"value":"151","sensor":"final","time":"1530155052"}]',',{"value":"250","sensor":"middle1","time":"1530155052"}'))
   end)
   cl:connect(80,"192.168.4.3")
 end
