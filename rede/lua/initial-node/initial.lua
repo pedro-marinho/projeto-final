@@ -7,6 +7,9 @@ wifi.ap.config({ssid="main_node", pwd="a12345678"})
 -- Definindo IP no modo AP
 wifi.ap.setip({ip="192.168.4.3", netmask="255.255.255.0", gateway="192.168.4.3"})
 
+-- Variável que armazena dado recebido
+local data
+
 -- Inicializando
 print("AWAKE")
 print(wifi.ap.getip())
@@ -25,12 +28,15 @@ local function cb_send_message(code, data)
   end
 
   print("vai dormir")
-  node.dsleep(10000000)
+  node.dsleep(5000000)
 end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
-  http.post("http://polar-dawn-30624.herokuapp.com/values", 'Content-Type: application/json\r\n', parseJSONArray('[{"value":"150","sensor":"final","time":"1530155052"},{"value":"250","sensor":"middle1","time":"1530155052"}]',',{"value":"3500","sensor":"initial","time":"1530155053"}'), cb_send_message)
+  local dataToBeSent = parseJSONArray(data,',{"value":"3500","sensor":"initial","time":"1530155053"}')
+  print("data to be sent")
+  print(dataToBeSent)
+  http.post("http://polar-dawn-30624.herokuapp.com/values", 'Content-Type: application/json\r\n', dataToBeSent, cb_send_message)
 end
 
 local function config_client_mode()
@@ -64,6 +70,7 @@ local function response_connection(client, request)
   local end_connection =  function() 
     print("requisicao")
     print(request)
+    data = request
     client:close()
     config_client_mode()
   end
