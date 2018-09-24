@@ -1,17 +1,25 @@
 local string = require "string"
 
--- Cria JSON
-local function parseJSONArray(source, str)
-  return string.sub(source, 1, string.len(source) - 1)..str.."]"
+local key = '1234567890abcdef'
+
+-- Lê valor
+local function getValue()
+  return '[{"value":"150","sensor":"final","time":"1530155052"}]'
 end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
   cl=net.createConnection(net.TCP, 0)
-  cl:on("receive", function(sck, c) print(c); end)
-  cl:on("disconnection", function(sck, c) print("vai dormir"); node.dsleep(5000000); end)
+  cl:on("receive", function(sck, c) print(c) end)
+  cl:on("disconnection", function(sck, c) print("vai dormir"); node.dsleep(10000000); end)
   cl:on("connection", function(sck, c)
-    sck:send('[{"value":"150","sensor":"final","time":"1530155052"}]')
+    dataToSend = getValue()
+    encryptedData = crypto.encrypt("AES-CBC", key, dataToSend)
+    sck:send(encryptedData)
+    if file.open("log.txt", "a+") then
+      file.writeline("Data sent at 1530155052") 
+      file.close()
+    end
   end)
   cl:connect(80,"192.168.4.2")
 end

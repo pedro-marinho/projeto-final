@@ -10,6 +10,13 @@ wifi.ap.setip({ip="192.168.4.3", netmask="255.255.255.0", gateway="192.168.4.3"}
 -- Variável que armazena dado recebido
 local data
 
+local key = '1234567890abcdef'
+
+-- Lê valor
+local function getValue()
+  return ',{"value":"3500","sensor":"initial","time":"1530155053"}'
+end
+
 -- Inicializando
 print("AWAKE")
 print(wifi.ap.getip())
@@ -28,15 +35,16 @@ local function cb_send_message(code, data)
   end
 
   print("vai dormir")
-  node.dsleep(5000000)
+  node.dsleep(10000000)
 end
 
 -- Envia mensagem para o próximo nó
 local function send_message()
-  local dataToBeSent = parseJSONArray(data,',{"value":"3500","sensor":"initial","time":"1530155053"}')
-  print("data to be sent")
-  print(dataToBeSent)
-  http.post("http://polar-dawn-30624.herokuapp.com/values", 'Content-Type: application/json\r\n', dataToBeSent, cb_send_message)
+  http.post("http://polar-dawn-30624.herokuapp.com/values", 'Content-Type: application/json\r\n', parseJSONArray(data, getValue()), cb_send_message)
+  if file.open("log.txt", "a+") then
+    file.writeline("Data sent at 1530155052") 
+    file.close()
+  end
 end
 
 local function config_client_mode()
@@ -69,8 +77,7 @@ Connection: Closed
 local function response_connection(client, request)
   local end_connection =  function() 
     print("requisicao")
-    print(request)
-    data = request
+    data = crypto.decrypt("AES-CBC", key, request):match("(.-)%z*$")
     client:close()
     config_client_mode()
   end
