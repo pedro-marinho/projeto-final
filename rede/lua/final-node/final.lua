@@ -4,7 +4,7 @@ local key = '1234567890abcdef'
 
 -- Lê valor
 local function getValue()
-  return '[{"value":"150","sensor":"final","time":"1530155052"}]'
+  return '[{"value":"150","sensor":"final"}]'
 end
 
 -- Envia mensagem para o próximo nó

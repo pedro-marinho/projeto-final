@@ -14,7 +14,7 @@ local key = '1234567890abcdef'
 
 -- Lê valor
 local function getValue()
-  return ',{"value":"3500","sensor":"initial","time":"1530155053"}'
+  return ',{"value":"3500","sensor":"initial"}'
 end
 
 -- Inicializando
