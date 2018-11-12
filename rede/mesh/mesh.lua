@@ -1,4 +1,5 @@
 local string = require "string"
+local math = require "math"
 local buf = "resposta"
 
 local key = '1234567890abcdef'
@@ -13,7 +14,7 @@ local M = {}
 local function send_message(data)
     cl=net.createConnection(net.TCP, 0)
     cl:on("receive", function(sck, c) print(c) end)
-    -- cl:on("disconnection", function(sck, c) print("vai dormir"); node.dsleep(10000000); end)
+    cl:on("disconnection", function(sck, c) print("vai dormir"); node.dsleep(math.random(10,20)*1000000); end)
     cl:on("connection", function(sck, c)
       encryptedData = crypto.encrypt("AES-CBC", key, data)
       sck:send(encryptedData)
@@ -76,17 +77,23 @@ end
 -- Envia dado para o próximo nó
 function M.sendData(data)
     function listap(t)
+        local dataSent = false
         for ssid, mac in pairs(t) do
             local initial, final = string.find(ssid, 'MeshNetwork', 1, true)
             if initial ~= nil and final ~= nil then
                 local nextNodeId = tonumber(string.sub(ssid, final + 1, string.len(ssid)))
                 if nodeId > nextNodeId then
-                    print('vai mandar')
+                    print('vai mandar para ' .. nextNodeId)
                     config_client_mode(ssid, data)
+                    dataSent = true
                     break
                 end
             end
         end
+        -- if dataSent ~= true then
+        --     print("nao achou e vai dormir")
+        --     node.dsleep(math.random(10,20)*1000000)
+        -- end
     end
     wifi.setmode(wifi.STATION)
     wifi.sta.getap(listap)
