@@ -10,18 +10,27 @@ end
 -- Envia mensagem para o próximo nó
 local function send_message()
   cl=net.createConnection(net.TCP, 0)
-  cl:on("receive", function(sck, c) print(c) end)
+  cl:on("receive", function(sck, c)
+    print(c)
+    if file.open("log.txt", "a+") then
+      file.writeline("fim do envio: " .. tmr.time()) 
+      file.close()
+    end
+  end)
+
   cl:on("disconnection", function(sck, c) print("vai dormir"); node.dsleep(10000000); end)
+
   cl:on("connection", function(sck, c)
     dataToSend = getValue()
     encryptedData = crypto.encrypt("AES-CBC", key, dataToSend)
     sck:send(encryptedData)
-    if file.open("log.txt", "a+") then
-      file.writeline("Data sent at 1530155052") 
-      file.close()
-    end
   end)
   cl:connect(80,"192.168.4.2")
+end
+
+if file.open("log.txt", "a+") then
+  file.writeline("inicio do envio: " .. tmr.time()) 
+  file.close()
 end
 
 -- Configurando modo cliente

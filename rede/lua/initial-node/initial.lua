@@ -41,10 +41,6 @@ end
 -- Envia mensagem para o próximo nó
 local function send_message()
   http.post("http://polar-dawn-30624.herokuapp.com/values", 'Content-Type: application/json\r\n', parseJSONArray(data, getValue()), cb_send_message)
-  if file.open("log.txt", "a+") then
-    file.writeline("Data sent at 1530155052") 
-    file.close()
-  end
 end
 
 local function config_client_mode()
